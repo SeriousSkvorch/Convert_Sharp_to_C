@@ -9,13 +9,9 @@ namespace ProjectCSharp_V2
     public static void Main(string[] args)
     {
       // ЦЕЛЬ - 10-12 ключевых слов (основные типы данных, if, for, while)
-      // ДОСТИГНУТО - 3 типа данных, printf (4)
+      // ДОСТИГНУТО - 5 типов данных, printf (6)
       // ОСТАЛОСЬ - 6-8 ключевых слов
-      
-      // ПОДСКАЗКА ДЛЯ СЛЕДУЮЩЕЙ РАБОТЫ:
-      // string x = "string" ----> char x[] = "string" ------> %s
-      // char x = 'c' -----> char x = 'c' ------> 'c'
-      
+
       #region СООБЩЕНИЕ ДЛЯ ПОЛЬЗОВАТЕЛЯ
       Console.WriteLine("Транслятор C# в C");
       
@@ -89,6 +85,7 @@ namespace ProjectCSharp_V2
         {
           string result = line.Trim();
           code += tab + result;
+          continue;
         }
         #endregion 
         
@@ -144,6 +141,18 @@ namespace ProjectCSharp_V2
                   print2[0] = print2[0].Replace("{" + changecount + "}", "%f");
                   changecount++;
                 }
+                
+                if (vars[result1] == "char")
+                {
+                  print2[0] = print2[0].Replace("{" + changecount + "}", "%c");
+                  changecount++;
+                }
+                
+                if (vars[result1] == "string")
+                {
+                  print2[0] = print2[0].Replace("{" + changecount + "}", "%s");
+                  changecount++;
+                }
               }
               else
               {
@@ -165,6 +174,18 @@ namespace ProjectCSharp_V2
                   print2[0] = print2[0].Replace("{" + changecount + "}", "%f");
                   changecount++;
                 }
+                
+                if (vars[result] == "char")
+                {
+                  print2[0] = print2[0].Replace("{" + changecount + "}", "%c");
+                  changecount++;
+                }
+                
+                if (vars[result] == "string")
+                {
+                  print2[0] = print2[0].Replace("{" + changecount + "}", "%s");
+                  changecount++;
+                }
               }
             }
           }
@@ -173,6 +194,7 @@ namespace ProjectCSharp_V2
           {
             code += tab + "printf(\"\\n\");";
           }
+          continue;
         }
         #endregion 
         
@@ -180,8 +202,8 @@ namespace ProjectCSharp_V2
         if (line.Contains("int"))
         {
           string result = line.Trim();
+          string[] variable = result.Split();
           code += tab + result;
-          string[] variable = line.Split();
           for (int j = 0; j < variable.Length; j++)
           {
             if (variable[j] != "")
@@ -190,6 +212,7 @@ namespace ProjectCSharp_V2
               break;
             }
           }
+          continue;
         }
         #endregion
         
@@ -197,8 +220,8 @@ namespace ProjectCSharp_V2
         if (line.Contains("float"))
         {
           string result = line.Trim();
+          string[] variable = result.Split();
           code += tab + result;
-          string[] variable = line.Split();
           for (int j = 0; j < variable.Length; j++)
           {
             if (variable[j] != "")
@@ -207,6 +230,7 @@ namespace ProjectCSharp_V2
               break;
             }
           }
+          continue;
         }
         #endregion
         
@@ -214,8 +238,8 @@ namespace ProjectCSharp_V2
         if (line.Contains("double"))
         {
           string result = line.Trim();
+          string[] variable = result.Split();
           code += tab + result;
-          string[] variable = line.Split();
           for (int j = 0; j < variable.Length; j++)
           {
             if (variable[j] != "")
@@ -224,6 +248,54 @@ namespace ProjectCSharp_V2
               break;
             }
           }
+          continue;
+        }
+        #endregion
+
+        #region STRING
+        if (line.Contains("string"))
+        {
+          string result = line.Trim();
+          string[] variable = result.Split();
+          for (int j = 0; j < variable.Length; j++)
+          {
+            if (variable[j] != "")
+            {
+              vars.Add(variable[j + 1], variable[j]);
+              break;
+            }
+          }
+          variable[0] = "char";
+          variable[1] += "[]";
+          result = "";
+          for (int j = 0; j < variable.Length; j++)
+          {
+            result += variable[j];
+            if (j + 1 != variable.Length)
+            {
+              result += " ";
+            }
+          }
+          code += tab + result;
+          continue;
+        }
+        #endregion
+        
+        #region CHAR
+        if (line.Contains("char"))
+        {
+          string result = line.Trim();
+          string[] variable = result.Split();
+          code += tab + result;
+          for (int j = 0; j < variable.Length; j++)
+          {
+            if (variable[j] != "")
+            {
+              vars.Add(variable[j + 1], variable[j]);
+              break;
+            }
+          }
+          continue;
         }
         #endregion
       }
