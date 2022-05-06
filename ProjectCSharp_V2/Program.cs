@@ -17,10 +17,16 @@ namespace ProjectCSharp_V2
       // char x = 'c' -----> char x = 'c' ------> 'c'
       
       #region СООБЩЕНИЕ ДЛЯ ПОЛЬЗОВАТЕЛЯ
+      Console.WriteLine("Транслятор C# в C");
+      
       Console.ForegroundColor = ConsoleColor.Red;
       Console.WriteLine("ПРОЧТИТЕ ПЕРЕД НАЧАЛОМ ИСПОЛЬЗОВАНИЯ!");
       Console.ResetColor();
-
+      
+      Console.WriteLine("Для приложения необходимо:");
+      Console.WriteLine("1) Файл с кодом C#, который соответствует возможностям приложения (см. ниже)");
+      Console.WriteLine("2) Функция MAIN в коде C#");
+      
       Console.Write("Приложение может:\n");
       Console.Write("1) Переводить вывод на консоль с неограниченным количеством аргументов");
       Console.Write("\nПРИМЕЧАНИЕ ДЛЯ п1: в качестве аргументов НЕ РЕКОМЕНДУЕТСЯ использовать примеры в исходном коде (например, x+y).\n");
@@ -74,18 +80,19 @@ namespace ProjectCSharp_V2
       }
       #endregion
       
-      #region ПРОХОД ПО ФУНКЦИИ MAIN
+      // Прохождение функции MAIN
       for (int i = pos; i < data.Length; i++)
       {
-        string line = data[i];
-        //КОММЕНТАРИИ
+        string line = data[i]; 
+        #region КОММЕНТАРИИ
         if (line.Contains("//") && !line.Contains("Console.WriteLine") && !line.Contains("Console.Write"))
         {
           string result = line.Trim();
           code += tab + result;
         }
-        //Console.WriteLine
-        //Console.Write
+        #endregion 
+        
+        #region Console.Write
         if (line.Contains("Console.WriteLine") || line.Contains("Console.Write"))
         {
           string[] print1 = line.Split('(');
@@ -167,7 +174,9 @@ namespace ProjectCSharp_V2
             code += tab + "printf(\"\\n\");";
           }
         }
-        // INT
+        #endregion 
+        
+        #region INT
         if (line.Contains("int"))
         {
           string result = line.Trim();
@@ -182,7 +191,9 @@ namespace ProjectCSharp_V2
             }
           }
         }
-        // FLOAT
+        #endregion
+        
+        #region FLOAT
         if (line.Contains("float"))
         {
           string result = line.Trim();
@@ -197,7 +208,9 @@ namespace ProjectCSharp_V2
             }
           }
         }
-        // DOUBLE
+        #endregion
+        
+        #region DOUBLE
         if (line.Contains("double"))
         {
           string result = line.Trim();
@@ -212,10 +225,9 @@ namespace ProjectCSharp_V2
             }
           }
         }
-        
+        #endregion
       }
-      #endregion
-      
+
       #region Запись кода в файл .CPP
       StreamWriter sw = new StreamWriter("test.cpp");
       sw.WriteLine(start);
