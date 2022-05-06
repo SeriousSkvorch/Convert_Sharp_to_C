@@ -8,13 +8,41 @@ namespace ProjectCSharp_V2
   {
     public static void Main(string[] args)
     {
+      // ЦЕЛЬ - 10-12 ключевых слов (основные типы данных, if, for, while)
+      // ДОСТИГНУТО - 3 типа данных, printf (4)
+      // ОСТАЛОСЬ - 6-8 ключевых слов
+      
+      // ПОДСКАЗКА ДЛЯ СЛЕДУЮЩЕЙ РАБОТЫ:
+      // string x = "string" ----> char x[] = "string" ------> %s
+      // char x = 'c' -----> char x = 'c' ------> 'c'
+      
+      //СООБЩЕНИЕ ДЛЯ ПОЛЬЗОВАТЕЛЯ
+      Console.ForegroundColor = ConsoleColor.Red;
+      Console.WriteLine("ПРОЧТИТЕ ПЕРЕД НАЧАЛОМ ИСПОЛЬЗОВАНИЯ!");
+      Console.ResetColor();
+
+      Console.Write("Приложение может:\n");
+      Console.Write("1) Переводить вывод на консоль с неограниченным количеством аргументов");
+      Console.Write("\nПРИМЕЧАНИЕ ДЛЯ п1: в качестве аргументов НЕ РЕКОМЕНДУЕТСЯ использовать примеры в исходном коде (например, x+y).\n");
+      Console.Write("Приложение может переводить ТОЛЬКО примеры с двумя переменными!\n");
+      Console.Write("2) Переводимые типы данных:\n");
+      Console.Write("- int\n");
+      Console.Write("- float\n");
+      Console.Write("- double");
+      
+      Console.WriteLine("\n~~~~~~~~~~~~~~~~~~~~~~~~");
+      Console.WriteLine("Главное меню");
+      
+      #region ДОПОЛНИТЕЛЬНЫЕ ПЕРЕМЕННЫЕ
       // Позиция для начала функции Main
       int pos = 0;
       // Позиция для переменных в Console.WriteLine
       int pos2 = 0;
+      #endregion
+      
       #region ПЕРЕМЕННЫЕ ДЛЯ ПЕРЕВОДА КОДА
       Dictionary<string, string> vars = new Dictionary<string, string>();
-      string start = "#include \"stdafx.h\"\n#include <locale.h>\n#include <string.h>\n\nint _tmain(int argc, _TCHAR* argv[])\n{";
+      string start = "#include \"stdafx.h\"\n#include <locale.h>\n#include <string.h>\n#include <stdlib.h>\n#include <math.h>\n\nint _tmain(int argc, _TCHAR* argv[])\n{";
       string code = "";
       string tab = "\n\t";
       string end = "\treturn 0;\n}";
@@ -49,59 +77,96 @@ namespace ProjectCSharp_V2
       for (int i = pos; i < data.Length; i++)
       {
         string line = data[i];
+        //КОММЕНТАРИИ
+        if (line.Contains("//") && !line.Contains("Console.WriteLine") && !line.Contains("Console.Write"))
+        {
+          string result = line.Trim();
+          code += tab + result;
+        }
+        //Console.WriteLine
+        //Console.Write
         if (line.Contains("Console.WriteLine") || line.Contains("Console.Write"))
         {
-          string[] print_1 = line.Split('(');
-          string[] print_2 = print_1[1].Split(')');
-          string param = print_2[0];
-          if (print_2[0].Contains("{0}"))
+          string[] print1 = line.Split('(');
+          string[] print2 = print1[1].Split(')');
+          string param = print2[0];
+          if (print2[0].Contains("{0}"))
           {
             for (int j = param.Length - 1; j >= 0; j--)
             {
-              if (param[j] == ',' && param[j - 1] == '"')
+              if (param[j] == ',' && param[j - 1] == '"' && param.Contains("\","))
               {
                 pos2 = j + 1;
                 break;
               }
             }
           }
-
-          string param2 = "";
-
-          for (int j = pos2; j < param.Length; j++)
+          // ПЕРЕВОД АРГУМЕНТОВ
+          if (pos2 != 0)
           {
-            param2 += param[j];
-          }
+            string param2 = "";
 
-          string[] allparams = param2.Split(',');
-          int changecount = 0;
-          foreach (string oneparam in allparams)
-          {
-            if (oneparam.Contains("+") || oneparam.Contains("-") || oneparam.Contains("*") || oneparam.Contains("/"))
+            for (int j = pos2; j < param.Length; j++)
             {
-              string[] mulparam = oneparam.Split(' ');
-              string result1 = mulparam[1].Trim(' ');
-              string result2 = mulparam[3].Trim(' ');
-              if (vars[result1] == "int" && vars[result2] == "int")
+              param2 += param[j];
+            }
+
+            string[] allparams = param2.Split(',');
+            int changecount = 0;
+            foreach (string oneparam in allparams)
+            {
+              if (oneparam.Contains("+") || oneparam.Contains("-") || oneparam.Contains("*") || oneparam.Contains("/"))
               {
-                print_2[0] = print_2[0].Replace("{" + changecount + "}", "%d");
-                changecount++;
+                string[] mulparam = oneparam.Split(' ');
+                string result1 = mulparam[1].Trim(' ');
+                if (vars[result1] == "int")
+                {
+                  print2[0] = print2[0].Replace("{" + changecount + "}", "%d");
+                  changecount++;
+                }
+
+                if (vars[result1] == "float")
+                {
+                  print2[0] = print2[0].Replace("{" + changecount + "}", "%f");
+                  changecount++;
+                }
+
+                if (vars[result1] == "double")
+                {
+                  print2[0] = print2[0].Replace("{" + changecount + "}", "%f");
+                  changecount++;
+                }
+              }
+              else
+              {
+                string result = oneparam.Trim();
+                if (vars[result] == "int")
+                {
+                  print2[0] = print2[0].Replace("{" + changecount + "}", "%d");
+                  changecount++;
+                }
+
+                if (vars[result] == "float")
+                {
+                  print2[0] = print2[0].Replace("{" + changecount + "}", "%f");
+                  changecount++;
+                }
+
+                if (vars[result] == "double")
+                {
+                  print2[0] = print2[0].Replace("{" + changecount + "}", "%f");
+                  changecount++;
+                }
               }
             }
-            else
-            {
-              string result = oneparam.Trim();
-              if (vars[result] == "int")
-              {
-                print_2[0] = print_2[0].Replace("{" + changecount + "}", "%d");
-                changecount++;
-              }
-            }
           }
-
-          code += tab + "printf(" + print_2[0] + ");";
+          code += tab + "printf(" + print2[0] + ");";
+          if (line.Contains("Console.WriteLine"))
+          {
+            code += tab + "printf(\"\\n\");";
+          }
         }
-
+        // INT
         if (line.Contains("int"))
         {
           string result = line.Trim();
@@ -109,17 +174,44 @@ namespace ProjectCSharp_V2
           string[] variable = line.Split();
           for (int j = 0; j < variable.Length; j++)
           {
-            if (variable[j] == "")
-            {
-              continue;
-            }
-            else
+            if (variable[j] != "")
             {
               vars.Add(variable[j + 1], variable[j]);
               break;
             }
           }
         }
+        // FLOAT
+        if (line.Contains("float"))
+        {
+          string result = line.Trim();
+          code += tab + result;
+          string[] variable = line.Split();
+          for (int j = 0; j < variable.Length; j++)
+          {
+            if (variable[j] != "")
+            {
+              vars.Add(variable[j + 1], variable[j]);
+              break;
+            }
+          }
+        }
+        // DOUBLE
+        if (line.Contains("double"))
+        {
+          string result = line.Trim();
+          code += tab + result;
+          string[] variable = line.Split();
+          for (int j = 0; j < variable.Length; j++)
+          {
+            if (variable[j] != "")
+            {
+              vars.Add(variable[j + 1], variable[j]);
+              break;
+            }
+          }
+        }
+        
       }
       #endregion
       
