@@ -41,11 +41,13 @@ namespace ProjectCSharp_V2
       int pos = 0;
       // Позиция для переменных в Console.WriteLine
       int pos2 = 0;
+      // Флаг для кода по умолчанию
+      int flag = 0;
       #endregion
       
       #region ПЕРЕМЕННЫЕ ДЛЯ ПЕРЕВОДА КОДА
       Dictionary<string, string> vars = new Dictionary<string, string>();
-      string start = "#include \"stdafx.h\"\n#include <locale.h>\n#include <string.h>\n#include <stdlib.h>\n#include <math.h>\n\nint _tmain(int argc, _TCHAR* argv[])\n{";
+      string start = "#include \"stdafx.h\"\n#include <locale.h>\n#include <string.h>\n#include <stdlib.h>\n#include <math.h>\n\nint _tmain(int argc, _TCHAR* argv[])\n{\n\tsetlocale(LC_ALL, \"ru\");";
       string code = "";
       string tab = "\n\t";
       string end = "\treturn 0;\n}";
@@ -198,6 +200,7 @@ namespace ProjectCSharp_V2
         }
         #endregion 
         
+        // ТИПЫ ДАННЫХ
         #region INT
         if (line.Contains("int"))
         {
@@ -295,8 +298,15 @@ namespace ProjectCSharp_V2
               break;
             }
           }
+          continue;
         }
         #endregion
+        
+        // DEFAULT
+        if (flag == 0 && !line.Contains("}") && !line.Contains("{"))
+        {
+          code += tab + line.Trim();
+        }
       }
 
       #region Запись кода в файл .CPP
