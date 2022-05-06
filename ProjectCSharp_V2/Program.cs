@@ -295,7 +295,6 @@ namespace ProjectCSharp_V2
               break;
             }
           }
-          continue;
         }
         #endregion
       }
