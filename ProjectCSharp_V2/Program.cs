@@ -16,7 +16,7 @@ namespace ProjectCSharp_V2
       // string x = "string" ----> char x[] = "string" ------> %s
       // char x = 'c' -----> char x = 'c' ------> 'c'
       
-      //СООБЩЕНИЕ ДЛЯ ПОЛЬЗОВАТЕЛЯ
+      #region СООБЩЕНИЕ ДЛЯ ПОЛЬЗОВАТЕЛЯ
       Console.ForegroundColor = ConsoleColor.Red;
       Console.WriteLine("ПРОЧТИТЕ ПЕРЕД НАЧАЛОМ ИСПОЛЬЗОВАНИЯ!");
       Console.ResetColor();
@@ -32,6 +32,7 @@ namespace ProjectCSharp_V2
       
       Console.WriteLine("\n~~~~~~~~~~~~~~~~~~~~~~~~");
       Console.WriteLine("Главное меню");
+      #endregion
       
       #region ДОПОЛНИТЕЛЬНЫЕ ПЕРЕМЕННЫЕ
       // Позиция для начала функции Main
