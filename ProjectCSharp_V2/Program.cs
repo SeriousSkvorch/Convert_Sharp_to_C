@@ -47,7 +47,9 @@ namespace ProjectCSharp_V2
       // Позиция для переменных в Console.WriteLine
       int pos2;
       // Флаг для кода по умолчанию
-      int flag = 0;
+      int flagFor = 0;
+      int flagIf = 0;
+      int flagWhile = 0;
       #endregion
       
       #region ПЕРЕМЕННЫЕ ДЛЯ ПЕРЕВОДА КОДА
@@ -55,6 +57,8 @@ namespace ProjectCSharp_V2
       string start = "#include \"stdafx.h\"\n#include <locale.h>\n#include <string.h>\n#include <stdlib.h>\n#include <math.h>\n\nint _tmain(int argc, _TCHAR* argv[])\n{\n\tsetlocale(LC_ALL, \"ru\");";
       string code = "";
       string tab = "\n\t";
+      string tab2 = "\t";
+      int flagtab = 0;
       string end = "\treturn 0;\n}";
       string[] data = File.ReadAllLines(@"D:\Program Files (x86)\ProjectVisualStudio\test.cs");
       #endregion
@@ -91,7 +95,12 @@ namespace ProjectCSharp_V2
         if (line.Contains("//") && !line.Contains("Console.WriteLine") && !line.Contains("Console.Write"))
         {
           string result = line.Trim();
-          code += tab + result;
+          code += tab;
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          code += result;
           continue;
         }
         #endregion
@@ -197,10 +206,20 @@ namespace ProjectCSharp_V2
               }
             }
           }
-          code += tab + "printf(" + print2[0] + ");";
+          code += tab;
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          code += "printf(" + print2[0] + ");";
           if (line.Contains("Console.WriteLine"))
           {
-            code += tab + "printf(\"\\n\");";
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += "printf(\"\\n\");";
           }
           continue;
         }
@@ -208,26 +227,102 @@ namespace ProjectCSharp_V2
         
         #region Console.ReadLine
         // ДЛЯ СТРОК
-        if (line.Contains("Console.ReadLine") && !line.Contains("Convert.to"))
+        if (line.Contains("Console.ReadLine") && !line.Contains("Convert"))
         {
           // string = Console.ReadLine();
           string[] words = line.Trim().Split();
-          code += tab + "scanf(\"%s\", &" + words[0] + ");";
+          code += tab;
+          code += tab;
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          code += "scanf(\"%s\", &" + words[0] + ");";
           continue;
         }
         // ДЛЯ ЧИСЕЛ
-        if (line.Contains("Console.ReadLine") && line.Contains("Convert.to"))
+        if (line.Contains("Console.ReadLine") && line.Contains("Convert"))
         {
           string[] words = line.Trim().Split();
           string[] conv = words[2].Split('.');
           if (conv[1].Contains("ToInt32") || conv[1].Contains("toInt32"))
           {
-            code += tab + "scanf(\"%d\", &" + words[0] + ");";
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += "scanf(\"%d\", &" + words[0] + ");";
           }
           if (conv[1].Contains("ToDouble") || conv[1].Contains("toDouble"))
           {
-            code += tab + "scanf(\"%f\", &" + words[0] + ");";
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += "scanf(\"%f\", &" + words[0] + ");";
           }
+          continue;
+        }
+        #endregion
+        
+        #region FOR
+        if (line.Contains("for ("))
+        {
+          flagFor = 1;
+          code += tab;
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          code += line.Trim();
+          flagtab++;
+          continue;
+        }
+        #endregion
+        
+        #region IF
+        if (line.Contains("if ("))
+        {
+          flagIf = 1;
+          code += tab;
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          code += line.Trim();
+          flagtab++;
+          continue;
+        }
+        #endregion
+        
+        #region ELSE
+        if (line.Contains("else"))
+        {
+          flagIf = 1;
+          code += tab;
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          code += line.Trim();
+          flagtab++;
+          continue;
+        }
+        #endregion
+
+        #region WHILE
+        if (line.Contains("while ("))
+        {
+          flagWhile = 1;
+          code += tab;
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          code += line.Trim();
+          flagtab++;
           continue;
         }
         #endregion
@@ -240,11 +335,21 @@ namespace ProjectCSharp_V2
           string[] variable = result.Split();
           if (variable.Length > 2)
           {
-            code += tab + result;
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += result;
           }
           else
           {
-            code += tab + variable[0] + " " + variable[1];
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += variable[0] + " " + variable[1];
           }
           vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
           continue;
@@ -258,11 +363,21 @@ namespace ProjectCSharp_V2
           string[] variable = result.Split();
           if (variable.Length > 2)
           {
-            code += tab + result;
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += result;
           }
           else
           {
-            code += tab + variable[0] + " " + variable[1];
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += variable[0] + " " + variable[1];
           }
           vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
           continue;
@@ -276,11 +391,21 @@ namespace ProjectCSharp_V2
           string[] variable = result.Split();
           if (variable.Length > 2)
           {
-            code += tab + result;
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += result;
           }
           else
           {
-            code += tab + variable[0] + " " + variable[1];
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += variable[0] + " " + variable[1];
           }
           vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
           continue;
@@ -294,6 +419,7 @@ namespace ProjectCSharp_V2
           string[] variable = result.Split();
           vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
           variable[0] = "char";
+          variable[1] = variable[1].Trim(';');
           variable[1] += "[]";
           result = "";
           for (int j = 0; j < variable.Length; j++)
@@ -306,11 +432,21 @@ namespace ProjectCSharp_V2
           }
           if (variable.Length > 2)
           {
-            code += tab + result;
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += result;
           }
           else
           {
-            code += tab + variable[0] + " " + variable[1];
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += variable[0] + " " + variable[1] + "= \"\";";
           }
           continue;
         }
@@ -323,21 +459,108 @@ namespace ProjectCSharp_V2
           string[] variable = result.Split();
           if (variable.Length > 2)
           {
-            code += tab + result;
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += result;
           }
           else
           {
-            code += tab + variable[0] + " " + variable[1];
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += variable[0] + " " + variable[1];
           }
           vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
           continue;
         }
         #endregion
-        
+
         // DEFAULT
-        if (flag == 0 && !line.Contains("}") && !line.Contains("{"))
+        if (flagFor != 0)
         {
-          code += tab + line.Trim();
+          code += tab;
+          if (line.Contains("{"))
+          {
+            flagtab--;
+          }
+          if (line.Contains("}"))
+          {
+            flagFor = 0;
+            flagtab--;
+          }
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          if (line.Contains("{"))
+          {
+            flagtab++;
+          }
+          code += line.Trim();
+          continue;
+        }
+
+        if (flagIf != 0)
+        {
+          code += tab;
+          if (line.Contains("{"))
+          {
+            flagtab--;
+          }
+          if (line.Contains("}"))
+          {
+            flagIf = 0;
+            flagtab--;
+          }
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          if (line.Contains("{"))
+          {
+            flagtab++;
+          }
+          code += line.Trim();
+          continue;
+        }
+        
+        if (flagWhile != 0)
+        {
+          code += tab;
+          if (line.Contains("{"))
+          {
+            flagtab--;
+          }
+          if (line.Contains("}"))
+          {
+            flagWhile = 0;
+            flagtab--;
+          }
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          if (line.Contains("{"))
+          {
+            flagtab++;
+          }
+          code += line.Trim();
+          continue;
+        }
+        
+        if (!line.Contains("}") && !line.Contains("{"))
+        {
+          code += tab;
+          for (int l = flagtab; l > 0; l--)
+          {
+            code += tab2;
+          }
+          code += line.Trim();
         }
       }
 
