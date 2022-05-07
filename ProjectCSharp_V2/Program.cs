@@ -9,8 +9,8 @@ namespace ProjectCSharp_V2
     public static void Main(string[] args)
     {
       // ЦЕЛЬ - 10-12 ключевых слов (основные типы данных, if, for, while)
-      // ДОСТИГНУТО - 5 типов данных, printf (6)
-      // ОСТАЛОСЬ - 6-8 ключевых слов
+      // ДОСТИГНУТО - 5 типов данных, printf (6), scanf (7),
+      // ОСТАЛОСЬ - 3-5 ключевых слов
 
       #region СООБЩЕНИЕ ДЛЯ ПОЛЬЗОВАТЕЛЯ
       Console.WriteLine("Транслятор C# в C");
@@ -22,6 +22,7 @@ namespace ProjectCSharp_V2
       Console.WriteLine("Для приложения необходимо:");
       Console.WriteLine("1) Файл с кодом C#, который соответствует возможностям приложения (см. ниже)");
       Console.WriteLine("2) Функция MAIN в коде C#");
+      Console.WriteLine("3) Корректно работающий код на C#");
       
       Console.Write("Приложение может:\n");
       Console.Write("1) Переводить вывод на консоль с неограниченным количеством аргументов");
@@ -30,7 +31,11 @@ namespace ProjectCSharp_V2
       Console.Write("2) Переводимые типы данных:\n");
       Console.Write("- int\n");
       Console.Write("- float\n");
-      Console.Write("- double");
+      Console.Write("- double\n");
+      Console.Write("- char\n");
+      Console.Write("- string\n");
+      Console.Write("3) Перевод функций ввода данных с консоли Console.ReadLine()\n");
+      Console.Write("4) Перевод Convert при вводе данных с консоли (т.е Convert.To***(Console.ReadLine()))");
       
       Console.WriteLine("\n~~~~~~~~~~~~~~~~~~~~~~~~");
       Console.WriteLine("Главное меню");
@@ -40,7 +45,7 @@ namespace ProjectCSharp_V2
       // Позиция для начала функции Main
       int pos = 0;
       // Позиция для переменных в Console.WriteLine
-      int pos2 = 0;
+      int pos2;
       // Флаг для кода по умолчанию
       int flag = 0;
       #endregion
@@ -89,8 +94,9 @@ namespace ProjectCSharp_V2
           code += tab + result;
           continue;
         }
-        #endregion 
+        #endregion
         
+        pos2 = 0;
         #region Console.Write
         if (line.Contains("Console.WriteLine") || line.Contains("Console.Write"))
         {
@@ -200,21 +206,47 @@ namespace ProjectCSharp_V2
         }
         #endregion 
         
+        #region Console.ReadLine
+        // ДЛЯ СТРОК
+        if (line.Contains("Console.ReadLine") && !line.Contains("Convert.to"))
+        {
+          // string = Console.ReadLine();
+          string[] words = line.Trim().Split();
+          code += tab + "scanf(\"%s\", &" + words[0] + ");";
+          continue;
+        }
+        // ДЛЯ ЧИСЕЛ
+        if (line.Contains("Console.ReadLine") && line.Contains("Convert.to"))
+        {
+          string[] words = line.Trim().Split();
+          string[] conv = words[2].Split('.');
+          if (conv[1].Contains("ToInt32") || conv[1].Contains("toInt32"))
+          {
+            code += tab + "scanf(\"%d\", &" + words[0] + ");";
+          }
+          if (conv[1].Contains("ToDouble") || conv[1].Contains("toDouble"))
+          {
+            code += tab + "scanf(\"%f\", &" + words[0] + ");";
+          }
+          continue;
+        }
+        #endregion
+        
         // ТИПЫ ДАННЫХ
         #region INT
         if (line.Contains("int"))
         {
           string result = line.Trim();
           string[] variable = result.Split();
-          code += tab + result;
-          for (int j = 0; j < variable.Length; j++)
+          if (variable.Length > 2)
           {
-            if (variable[j] != "")
-            {
-              vars.Add(variable[j + 1], variable[j]);
-              break;
-            }
+            code += tab + result;
           }
+          else
+          {
+            code += tab + variable[0] + " " + variable[1];
+          }
+          vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
           continue;
         }
         #endregion
@@ -224,15 +256,15 @@ namespace ProjectCSharp_V2
         {
           string result = line.Trim();
           string[] variable = result.Split();
-          code += tab + result;
-          for (int j = 0; j < variable.Length; j++)
+          if (variable.Length > 2)
           {
-            if (variable[j] != "")
-            {
-              vars.Add(variable[j + 1], variable[j]);
-              break;
-            }
+            code += tab + result;
           }
+          else
+          {
+            code += tab + variable[0] + " " + variable[1];
+          }
+          vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
           continue;
         }
         #endregion
@@ -242,15 +274,15 @@ namespace ProjectCSharp_V2
         {
           string result = line.Trim();
           string[] variable = result.Split();
-          code += tab + result;
-          for (int j = 0; j < variable.Length; j++)
+          if (variable.Length > 2)
           {
-            if (variable[j] != "")
-            {
-              vars.Add(variable[j + 1], variable[j]);
-              break;
-            }
+            code += tab + result;
           }
+          else
+          {
+            code += tab + variable[0] + " " + variable[1];
+          }
+          vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
           continue;
         }
         #endregion
@@ -260,14 +292,7 @@ namespace ProjectCSharp_V2
         {
           string result = line.Trim();
           string[] variable = result.Split();
-          for (int j = 0; j < variable.Length; j++)
-          {
-            if (variable[j] != "")
-            {
-              vars.Add(variable[j + 1], variable[j]);
-              break;
-            }
-          }
+          vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
           variable[0] = "char";
           variable[1] += "[]";
           result = "";
@@ -279,7 +304,14 @@ namespace ProjectCSharp_V2
               result += " ";
             }
           }
-          code += tab + result;
+          if (variable.Length > 2)
+          {
+            code += tab + result;
+          }
+          else
+          {
+            code += tab + variable[0] + " " + variable[1];
+          }
           continue;
         }
         #endregion
@@ -289,15 +321,15 @@ namespace ProjectCSharp_V2
         {
           string result = line.Trim();
           string[] variable = result.Split();
-          code += tab + result;
-          for (int j = 0; j < variable.Length; j++)
+          if (variable.Length > 2)
           {
-            if (variable[j] != "")
-            {
-              vars.Add(variable[j + 1], variable[j]);
-              break;
-            }
+            code += tab + result;
           }
+          else
+          {
+            code += tab + variable[0] + " " + variable[1];
+          }
+          vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
           continue;
         }
         #endregion
