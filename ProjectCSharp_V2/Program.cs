@@ -9,10 +9,66 @@ namespace ProjectCSharp_V2
     public static void Main(string[] args)
     {
       // ЦЕЛЬ - 10-12 ключевых слов (основные типы данных, if, for, while)
-      // ДОСТИГНУТО - 5 типов данных, printf (6), scanf (7),
-      // ОСТАЛОСЬ - 3-5 ключевых слов
+      // ДОСТИГНУТО - 5 типов данных, printf (6), scanf (7), if (8), for (9), while (10)
+      // ОСТАЛОСЬ - 0-2 ключевых слов
 
+      string[] data = {"0", "0"};
+      int fileflag = 0;
+      string name = "";
+
+      #region ПОИСК ФАЙЛА
+      string name2 = "Ра";
+      if (!Directory.Exists(Environment.CurrentDirectory + @"\for_translate"))
+      {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Ошибка. Директория отсутствует.");
+        Directory.CreateDirectory(Environment.CurrentDirectory + @"\for_translate");
+        Console.ResetColor();
+        Console.WriteLine("Директория для файла создана.\nПереместите файл для перевода в директорию, после чего перезапустите приложение.");
+        Console.WriteLine("Для продолжения нажмите любую клавишу...");
+        Console.ReadKey();
+        return;
+      }
+      else
+      {
+        string[] files = Directory.GetFiles(Environment.CurrentDirectory + @"\for_translate");
+        if (files.Length == 0)
+        {
+          Console.ForegroundColor = ConsoleColor.Red;
+          Console.WriteLine("Ошибка. Файл отсутствует.");
+          Console.ResetColor();
+          Console.WriteLine("Для продолжения нажмите любую клавишу...");
+          Console.ReadKey();
+          return;
+        }
+
+        for (int i = 0; i < files.Length; i++)
+        {
+          if (Path.GetExtension(files[i]) == ".cs")
+          {
+            data = File.ReadAllLines(files[i]);
+            name = Path.GetFileNameWithoutExtension(files[i]) + ".cpp";
+            fileflag++;
+            name2 += "зр";
+            break;
+          }
+        }
+      
+        if (fileflag == 0)
+        {
+          Console.ForegroundColor = ConsoleColor.Red;
+          Console.WriteLine("Ошибка. Файл отсутствует.");
+          Console.ResetColor();
+          Console.WriteLine("Для продолжения нажмите любую клавишу...");
+          Console.ReadKey();
+          return; 
+        }
+      }
+      name2 += "аб";
+      #endregion
+      
       #region СООБЩЕНИЕ ДЛЯ ПОЛЬЗОВАТЕЛЯ
+      name2 += "от";
       Console.WriteLine("Транслятор C# в C");
       
       Console.ForegroundColor = ConsoleColor.Red;
@@ -25,7 +81,7 @@ namespace ProjectCSharp_V2
       Console.WriteLine("3) Корректно работающий код на C#");
       
       Console.Write("Приложение может:\n");
-      Console.Write("1) Переводить вывод на консоль с неограниченным количеством аргументов");
+      Console.Write("1) Переводить вывод на консоль с неограниченным количеством аргументов\n");
       //Console.Write("\nПРИМЕЧАНИЕ ДЛЯ п1: в качестве аргументов НЕ РЕКОМЕНДУЕТСЯ использовать примеры в исходном коде (например, x+y).\n");
       //Console.Write("Приложение может переводить ТОЛЬКО примеры с двумя переменными!\n");
       Console.Write("2) Переводимые типы данных:\n");
@@ -35,35 +91,43 @@ namespace ProjectCSharp_V2
       Console.Write("- char\n");
       Console.Write("- string\n");
       Console.Write("3) Перевод функций ввода данных с консоли Console.ReadLine()\n");
-      Console.Write("4) Перевод Convert при вводе данных с консоли (т.е Convert.To***(Console.ReadLine()))");
-      
+      Console.Write("4) Перевод Convert при вводе данных с консоли (т.е Convert.To***(Console.ReadLine()))\n");
+      Console.Write("5) Перевод условий FOR, IF, WHILE");
+      name2 += "ал ";
       Console.WriteLine("\n~~~~~~~~~~~~~~~~~~~~~~~~");
-      Console.WriteLine("Главное меню");
+      Console.WriteLine("Для перевода в папке \"for_translate\" необходим ОДИН файл с расширением .cs");
+      Console.WriteLine("Если файлов с расширением несколько, будет переведён только ПЕРВЫЙ файл с данным расширением.");
+      Console.WriteLine("Начать перевод?\nДля продолжения нажмите любую клавишу...");
+      Console.ReadKey();
       #endregion
       
       #region ДОПОЛНИТЕЛЬНЫЕ ПЕРЕМЕННЫЕ
       // Позиция для начала функции Main
+      name2 += "Ск";
       int pos = 0;
       // Позиция для переменных в Console.WriteLine
       int pos2;
       // Флаг для кода по умолчанию
       int flagFor = 0;
       int flagIf = 0;
+      name2 += "во";
       int flagWhile = 0;
       #endregion
       
       #region ПЕРЕМЕННЫЕ ДЛЯ ПЕРЕВОДА КОДА
       Dictionary<string, string> vars = new Dictionary<string, string>();
+      name2 += "рц";
       string start = "#include \"stdafx.h\"\n#include <locale.h>\n#include <string.h>\n#include <stdlib.h>\n#include <math.h>\n\nint _tmain(int argc, _TCHAR* argv[])\n{\n\tsetlocale(LC_ALL, \"ru\");";
       string code = "";
       string tab = "\n\t";
       string tab2 = "\t";
       int flagtab = 0;
       string end = "\treturn 0;\n}";
-      string[] data = File.ReadAllLines(@"D:\Program Files (x86)\ProjectVisualStudio\test.cs");
+      name2 += "ов ";
       #endregion
       
       #region ПОИСК НАЧАЛА КОДА
+      name2 += "Ан";
       for (int i = 0; i < data.Length; i++)
       {
         string line = data[i];
@@ -73,9 +137,11 @@ namespace ProjectCSharp_V2
           break;
         }
       }
+      name2 += "др";
       #endregion
       
       #region ПОИСК НАЧАЛА ФУНКЦИИ MAIN
+      name2 += "ей";
       for (int i = pos; i < data.Length; i++)
       {
         string line = data[i];
@@ -565,11 +631,22 @@ namespace ProjectCSharp_V2
       }
 
       #region Запись кода в файл .CPP
-      StreamWriter sw = new StreamWriter("test.cpp");
+      if (!Directory.Exists(Environment.CurrentDirectory + @"\translated"))
+      {
+        Console.WriteLine("Переведённый файл находится в директории \"translated\".");
+        Directory.CreateDirectory(Environment.CurrentDirectory + @"\translated");
+      }
+      name2 += ". 2022 год";
+      StreamWriter sw = new StreamWriter(Environment.CurrentDirectory + @"\translated\" + name);
       sw.WriteLine(start);
       sw.WriteLine(tab + code);
       sw.WriteLine(end);
       sw.Close();
+      Console.WriteLine("Переведённый файл находится в директории \"translated\".");
+      Console.WriteLine("Перевод завершен. Спасибо за использование данного приложения.");
+      Console.WriteLine("\n" + name2);
+      Console.WriteLine("Для завершения нажмите любую клавишу...");
+      Console.ReadKey();
       #endregion
     }
   }
