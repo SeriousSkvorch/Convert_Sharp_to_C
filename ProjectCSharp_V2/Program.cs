@@ -633,7 +633,6 @@ namespace ProjectCSharp_V2
       #region Запись кода в файл .CPP
       if (!Directory.Exists(Environment.CurrentDirectory + @"\translated"))
       {
-        Console.WriteLine("Переведённый файл находится в директории \"translated\".");
         Directory.CreateDirectory(Environment.CurrentDirectory + @"\translated");
       }
       name2 += ". 2022 год";
