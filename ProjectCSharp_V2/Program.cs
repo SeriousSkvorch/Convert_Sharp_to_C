@@ -83,9 +83,9 @@ namespace ProjectCSharp_V2
         Console.WriteLine("3) Корректно работающий код на C#");
         
         Console.Write("Приложение может:\n");
-        Console.Write("1) Переводить вывод на консоль с неограниченным количеством аргументов\n");
-        //Console.Write("\nПРИМЕЧАНИЕ ДЛЯ п1: в качестве аргументов НЕ РЕКОМЕНДУЕТСЯ использовать примеры в исходном коде (например, x+y).\n");
-        //Console.Write("Приложение может переводить ТОЛЬКО примеры с двумя переменными!\n");
+        Console.Write("1) Переводить вывод на консоль с ограниченным количеством аргументов\n");
+        Console.Write("ПРИМЕЧАНИЕ ДЛЯ п1: в качестве аргументов НЕ РЕКОМЕНДУЕТСЯ использовать примеры в исходном коде (например, x+y).\n");
+        Console.Write("Приложение может переводить ТОЛЬКО примеры с двумя переменными!\n");
         Console.Write("2) Переводимые типы данных:\n");
         Console.Write("- int\n");
         Console.Write("- float\n");
@@ -207,35 +207,35 @@ namespace ProjectCSharp_V2
               {
                 if (oneparam.Contains("+") || oneparam.Contains("-") || oneparam.Contains("*") || oneparam.Contains("/"))
                 {
-                  //string result11 = oneparam.Trim(' ');
-                  //int index = result11.IndexOf("+", 0);
-                  string[] mulparam = oneparam.Split(' ');
-                  string result1 = mulparam[1].Trim(' ');
-                  if (vars[result1] == "int")
+                  string result11 = oneparam.Trim(' ');
+                  int index = result11.IndexOf("+", 0);
+                  string var1 = result11.Substring(0, index).Trim(' ');
+
+                  if (vars[var1] == "int")
                   {
                     print2[0] = print2[0].Replace("{" + changecount + "}", "%d");
                     changecount++;
                   }
 
-                  if (vars[result1] == "float")
+                  if (vars[var1] == "float")
                   {
                     print2[0] = print2[0].Replace("{" + changecount + "}", "%f");
                     changecount++;
                   }
 
-                  if (vars[result1] == "double")
+                  if (vars[var1] == "double")
                   {
                     print2[0] = print2[0].Replace("{" + changecount + "}", "%f");
                     changecount++;
                   }
                   
-                  if (vars[result1] == "char")
+                  if (vars[var1] == "char")
                   {
                     print2[0] = print2[0].Replace("{" + changecount + "}", "%c");
                     changecount++;
                   }
                   
-                  if (vars[result1] == "string")
+                  if (vars[var1] == "string")
                   {
                     print2[0] = print2[0].Replace("{" + changecount + "}", "%s");
                     changecount++;
