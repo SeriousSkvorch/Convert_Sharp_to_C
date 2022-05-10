@@ -97,7 +97,7 @@ namespace ProjectCSharp_V2
       Console.WriteLine("\n~~~~~~~~~~~~~~~~~~~~~~~~");
       Console.WriteLine("Для перевода в папке \"for_translate\" необходим ОДИН файл с расширением .cs");
       Console.WriteLine("Если файлов с расширением несколько, будет переведён только ПЕРВЫЙ файл с данным расширением.");
-      Console.WriteLine("Начать перевод?\nДля продолжения нажмите любую клавишу...");
+      Console.WriteLine("Для начала перевода нажмите любую клавишу...");
       Console.ReadKey();
       #endregion
       
