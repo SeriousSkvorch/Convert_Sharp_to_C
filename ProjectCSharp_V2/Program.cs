@@ -24,7 +24,7 @@ namespace ProjectCSharp_V2
         Console.WriteLine("Ошибка. Директория отсутствует.");
         Directory.CreateDirectory(Environment.CurrentDirectory + @"\for_translate");
         Console.ResetColor();
-        Console.WriteLine("Директория для файла создана.\nПереместите файл для перевода в директорию, после чего перезапустите приложение.");
+        Console.WriteLine("Директория для файла создана.\nПереместите файл для перевода в директорию \"for_translate\", после чего перезапустите приложение.");
         Console.WriteLine("Для продолжения нажмите любую клавишу...");
         Console.ReadKey();
         return;
