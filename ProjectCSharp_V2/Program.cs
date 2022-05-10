@@ -133,7 +133,7 @@ namespace ProjectCSharp_V2
         for (int i = 0; i < data.Length; i++)
         {
           string line = data[i];
-          if (line.Contains("internal class Program"))
+          if (line.Contains("class Program"))
           {
             pos = i;
             break;
@@ -147,7 +147,7 @@ namespace ProjectCSharp_V2
         for (int i = pos; i < data.Length; i++)
         {
           string line = data[i];
-          if (line.Contains("public static void Main"))
+          if (line.Contains("static void Main"))
           {
             pos = i + 2;
             break;
