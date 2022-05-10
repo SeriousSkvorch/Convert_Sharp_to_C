@@ -207,6 +207,8 @@ namespace ProjectCSharp_V2
               {
                 if (oneparam.Contains("+") || oneparam.Contains("-") || oneparam.Contains("*") || oneparam.Contains("/"))
                 {
+                  //string result11 = oneparam.Trim(' ');
+                  //int index = result11.IndexOf("+", 0);
                   string[] mulparam = oneparam.Split(' ');
                   string result1 = mulparam[1].Trim(' ');
                   if (vars[result1] == "int")
@@ -295,6 +297,24 @@ namespace ProjectCSharp_V2
           
           #region Console.ReadLine
           // ДЛЯ СТРОК
+          if (line.Contains("string") && line.Contains("Console.ReadLine"))
+          {
+            string result = line.Trim();
+            string[] variable = result.Split();
+            vars.Add(variable[1].Trim(';'), variable[0].Trim(';'));
+            string varname = variable[1].Trim(';');
+            variable[0] = "char";
+            variable[1] = variable[1].Trim(';');
+            variable[1] += "[]";
+            result = variable[0] + " " + variable[1] + " = \"\"" + tab + "scanf(\"%s\", " + varname + ");";
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += result;
+            continue;
+          }
           if (line.Contains("Console.ReadLine") && !line.Contains("Convert"))
           {
             // string = Console.ReadLine();
