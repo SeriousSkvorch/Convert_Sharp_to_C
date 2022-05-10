@@ -653,6 +653,8 @@ namespace ProjectCSharp_V2
       catch (Exception ex)
       {
         Console.WriteLine("Ошибка: {0}", ex.Message);
+        Console.WriteLine("Для завершения нажмите любую клавишу...");
+        Console.ReadKey();
       }
     }
   }
