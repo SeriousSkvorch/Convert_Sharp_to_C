@@ -22,4 +22,5 @@ Convert C# to C (All convertible functions in the code)
   - string
 3) Перевод функций ввода данных с консоли Console.ReadLine()
 4) Перевод Convert при вводе данных с консоли (т.е Convert.To***(Console.ReadLine()))
-5) Перевод условий FOR, IF, WHILE
+5) Перевод условий FOR, IF, WHILE, SWITCH
+6) Перевод TRY CATCH (удаление блока с сохранением кода)
