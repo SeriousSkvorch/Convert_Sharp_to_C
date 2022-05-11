@@ -114,6 +114,7 @@ namespace ProjectCSharp_V2
         int flagIf = 0;
         name2 += "во";
         int flagWhile = 0;
+        int flagTry = 0;
         #endregion
         
         #region ПЕРЕМЕННЫЕ ДЛЯ ПЕРЕВОДА КОДА
@@ -172,7 +173,30 @@ namespace ProjectCSharp_V2
             continue;
           }
           #endregion
+
+          #region TryCatch
+          if (line.Contains("try"))
+          {
+            flagTry = 1;
+            continue;
+          }
+
+          if (line.Contains("catch"))
+          {
+            flagTry = 1;
+            continue;
+          }
           
+          if (flagTry != 0)
+          {
+            if (line.Contains("}"))
+            {
+              flagTry = 0;
+            }
+            continue;
+          }
+          #endregion
+
           pos2 = 0;
           #region Console.Write
           if (line.Contains("Console.WriteLine") || line.Contains("Console.Write"))
@@ -414,7 +438,11 @@ namespace ProjectCSharp_V2
             continue;
           }
           #endregion
+
+          #region SWITCH_CASE
           
+          #endregion
+
           // ТИПЫ ДАННЫХ
           #region INT
           if (line.Contains("int"))
@@ -640,7 +668,7 @@ namespace ProjectCSharp_V2
             code += line.Trim();
             continue;
           }
-          
+
           if (!line.Contains("}") && !line.Contains("{"))
           {
             code += tab;
