@@ -115,6 +115,8 @@ namespace ProjectCSharp_V2
         name2 += "во";
         int flagWhile = 0;
         int flagTry = 0;
+        int flagCatch = 0;
+        int flagSwitch = 0;
         #endregion
         
         #region ПЕРЕМЕННЫЕ ДЛЯ ПЕРЕВОДА КОДА
@@ -173,7 +175,34 @@ namespace ProjectCSharp_V2
             continue;
           }
           #endregion
-
+          
+          #region РЕГИОНЫ
+          if (line.Contains("#region"))
+          {
+            line = line.Replace("#region", "#pragma region");
+            string result = line.Trim();
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += result;
+            continue;
+          }
+          if (line.Contains("#endregion"))
+          {
+            line = line.Replace("#endregion", "#pragma endregion");
+            string result = line.Trim();
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += result;
+            continue;
+          }
+          #endregion
+          
           #region TryCatch
           if (line.Contains("try"))
           {
@@ -183,15 +212,19 @@ namespace ProjectCSharp_V2
 
           if (line.Contains("catch"))
           {
-            flagTry = 1;
+            flagCatch = 1;
             continue;
-          }
+          }          
           
-          if (flagTry != 0)
+          if (flagCatch != 0)
           {
+            if (line.Contains("{"))
+            {
+              continue;
+            }
             if (line.Contains("}"))
             {
-              flagTry = 0;
+              flagCatch = 0;
             }
             continue;
           }
@@ -233,6 +266,20 @@ namespace ProjectCSharp_V2
                 {
                   string result11 = oneparam.Trim(' ');
                   int index = result11.IndexOf("+", 0);
+                  if (index < 0)
+                  {
+                    index = result11.IndexOf("-", 0);
+                  }
+
+                  if (index < 0)
+                  {
+                    index = result11.IndexOf("*", 0);
+                  }
+
+                  if (index < 0)
+                  {
+                    index = result11.IndexOf("/", 0);
+                  }
                   string var1 = result11.Substring(0, index).Trim(' ');
 
                   if (vars[var1] == "int")
@@ -382,13 +429,25 @@ namespace ProjectCSharp_V2
           #region FOR
           if (line.Contains("for ("))
           {
+            string len = "";
             flagFor = 1;
+            if (line.Contains(".Length"))
+            {
+              string[] len1 = line.Trim(' ').Split(' ');
+              string len2 = len1[7];
+              string[] len3 = len2.Split('.');
+              len1[7] = "strlen(" + len3[0] + ");";
+              for (int x = 0; x < len1.Length; x++)
+              {
+                len += len1[x] + " ";
+              }
+            }
             code += tab;
             for (int l = flagtab; l > 0; l--)
             {
               code += tab2;
             }
-            code += line.Trim();
+            code += len;
             flagtab++;
             continue;
           }
@@ -398,6 +457,10 @@ namespace ProjectCSharp_V2
           if (line.Contains("if ("))
           {
             flagIf = 1;
+            if (line.Contains("char.IsLower"))
+            {
+              line = line.Replace("char.IsLower", "iswlower");
+            }
             code += tab;
             for (int l = flagtab; l > 0; l--)
             {
@@ -440,7 +503,17 @@ namespace ProjectCSharp_V2
           #endregion
 
           #region SWITCH_CASE
-          
+          if (line.Contains("switch"))
+          {
+            flagSwitch = 1;
+            code += tab;
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            code += line.Trim();
+            continue;
+          }
           #endregion
 
           // ТИПЫ ДАННЫХ
@@ -668,7 +741,57 @@ namespace ProjectCSharp_V2
             code += line.Trim();
             continue;
           }
-
+          
+          if (flagSwitch != 0)
+          {
+            code += tab;
+            if (line.Contains("{"))
+            {
+              flagtab--;
+            }
+            if (line.Contains("}"))
+            {
+              flagSwitch = 0;
+              flagtab--;
+            }
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            if (line.Contains("{"))
+            {
+              flagtab++;
+            }
+            code += line.Trim();
+            continue;
+          }
+          
+          if (flagTry != 0)
+          {
+            code += tab;
+            if (line.Contains("{"))
+            {
+              flagtab--;
+              continue;
+            }
+            if (line.Contains("}"))
+            {
+              flagTry = 0;
+              flagtab--;
+              continue;
+            }
+            for (int l = flagtab; l > 0; l--)
+            {
+              code += tab2;
+            }
+            if (line.Contains("{"))
+            {
+              flagtab++;
+            }
+            code += line.Trim();
+            continue;
+          }
+          
           if (!line.Contains("}") && !line.Contains("{"))
           {
             code += tab;

@@ -26,17 +26,24 @@ namespace TEST
 			string s1 = "abc";
 			string s2 = "dfg";
 			// Пример 1 - Простой вывод на консоль
-			Console.WriteLine("Hello, World!");
-			// Пример 2 - INT
-			Console.WriteLine("{0} _____ {1} _____ {2}", x1, x2, x1 + x2);
-			// Пример 3 - FLOAT
-			Console.WriteLine("{0} _____ {1} _____ {2}", y1, y2, y1 + y2);
-			// Пример 4 - DOUBLE
-			Console.WriteLine("{0} _____ {1} _____ {2}", z1, z2, z1 + z2);
-			// Пример 5 - CHAR
-			Console.WriteLine("{0} _____ {1} _____ {2}", c1, c2);
-			// Пример 6 - STRING
-			Console.WriteLine("{0} _____ {1}", s1, s2);
+			try
+			{
+				Console.WriteLine("Hello, World!");
+				// Пример 2 - INT
+				Console.WriteLine("{0} _____ {1} _____ {2}", x1, x2, x1+x2+y1+y2+z1+z2);
+				// Пример 3 - FLOAT
+				Console.WriteLine("{0} _____ {1} _____ {2}", y1, y2, y1+y2);
+				// Пример 4 - DOUBLE
+				Console.WriteLine("{0} _____ {1} _____ {2}", z1, z2, z1+z2);
+				// Пример 5 - CHAR
+				Console.WriteLine("{0} _____ {1} _____ {2}", c1, c2);
+				// Пример 6 - STRING
+				Console.WriteLine("{0} _____ {1}", s1, s2);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Error: {0}", ex.Message);
+			}
 			// Пример 7 - простые примеры
 			int sum = 0;
 			int mul = 0;
@@ -77,6 +84,25 @@ namespace TEST
 				x5 += 2;
 			}	
 			Console.WriteLine("12: {0}", x5);
+			// Пример 13 - Switch Case
+			int N = 0;
+			Console.Write("Введите N: ");
+			N = Convert.ToInt32(Console.ReadLine());
+			switch(N)
+			{
+				case (1):
+					Console.Write("ОДИН");
+					break;
+				case (2):
+					Console.Write("ДВА");
+					break;
+				case (3):
+					Console.Write("ТРИ");
+					break;
+				default:
+					Console.Write("Число не от 1 до 3.");
+					break;
+			}
         }
     }
 }
