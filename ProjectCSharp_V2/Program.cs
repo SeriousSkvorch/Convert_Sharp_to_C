@@ -447,7 +447,15 @@ namespace ProjectCSharp_V2
             {
               code += tab2;
             }
-            code += len;
+
+            if (len != "")
+            {
+              code += len;
+            }
+            else
+            {
+              code += line;
+            }
             flagtab++;
             continue;
           }
